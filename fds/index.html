@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphLearn - Interactive Graph Learning Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom right, #eff6ff, #e0e7ff);
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav h1 {
+            font-size: 1.5rem;
+            color: #1e293b;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .nav-btn:not(.active) {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .nav-btn:not(.active):hover {
+            background: #e2e8f0;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Home Page */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #475569;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .feature-card:nth-child(1):hover {
+            border-color: #3b82f6;
+        }
+
+        .feature-card:nth-child(2):hover {
+            border-color: #22c55e;
+        }
+
+        .feature-card:nth-child(3):hover {
+            border-color: #a855f7;
+        }
+
+        .feature-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: #475569;
+        }
+
+        /* Learn Page */
+        .section-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-card h3 {
+            font-size: 1.25rem;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-card p {
+            color: #334155;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .type-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .type-item {
+            border-left: 4px solid;
+            padding-left: 1rem;
+        }
+
+        .type-item h4 {
+            color: #334155;
+            margin-bottom: 0.25rem;
+        }
+
+        .type-item p {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Visualize Page */
+        .viz-grid {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 1rem;
+        }
+
+        .canvas-container {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        canvas {
+            border: 2px solid #e2e8f0;
+            border-radius: 0.375rem;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            color: white;
+        }
+
+        .btn:disabled {
+            background: #cbd5e1 !important;
+            cursor: not-allowed;
+        }
+
+        .btn-blue { background: #3b82f6; }
+        .btn-blue:hover:not(:disabled) { background: #2563eb; }
+        .btn-green { background: #22c55e; }
+        .btn-green:hover:not(:disabled) { background: #16a34a; }
+        .btn-red { background: #ef4444; }
+        .btn-red:hover:not(:disabled) { background: #dc2626; }
+        .btn-yellow { background: #eab308; }
+        .btn-yellow:hover:not(:disabled) { background: #ca8a04; }
+
+        select {
+            padding: 0.5rem 1rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .algo-panel {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .algo-panel h3 {
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .stats {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            margin-top: 1rem;
+        }
+
+        .stats p {
+            font-size: 0.875rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        pre {
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .viz-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            canvas {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <h1>GraphLearn</h1>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+                <button class="nav-btn" onclick="showPage('learn')">📖 Learn</button>
+                <button class="nav-btn" onclick="showPage('visualize')">⚡ Visualize</button>
+                <button class="nav-btn" onclick="showPage('algorithms')">💻 Algorithms</button>
+            </div>
+        </nav>
+
+        <div class="content">
+            <!-- Home Page -->
+            <div id="home" class="page active">
+                <div class="hero">
+                    <h1>Graph Data Structures</h1>
+                    <p>Learn, Visualize, and Master Graph Algorithms</p>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-card" onclick="showPage('learn')">
+                        <div class="feature-icon">📖</div>
+                        <h3>Learn</h3>
+                        <p>Understand graph theory concepts, representations, and terminology</p>
+                    </div>
+                    <div class="feature-card" onclick="showPage('visualize')">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Visualize</h3>
+                        <p>Build graphs and watch algorithms come to life with animations</p>
+                    </div>
+                    <div class="feature-card" onclick="showPage('algorithms')">
+                        <div class="feature-icon">💻</div>
+                        <h3>Algorithms</h3>
+                        <p>Explore BFS, DFS, Dijkstra's, and other graph algorithms</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learn Page -->
+            <div id="learn" class="page">
+                <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 1.5rem;">Learn Graph Basics</h2>
+                
+                <div class="section-card">
+                    <h3>What is a Graph?</h3>
+                    <p>A graph is a non-linear data structure consisting of vertices (nodes) and edges that connect these vertices. Graphs are used to represent relationships between objects.</p>
+                    <div class="info-box">
+                        <p style="font-family: monospace; font-size: 0.875rem;">G = (V, E) where V = set of vertices, E = set of edges</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3>Types of Graphs</h3>
+                    <div class="type-list">
+                        <div class="type-item" style="border-color: #22c55e;">
+                            <h4>Directed Graph (Digraph)</h4>
+                            <p>Edges have direction, going from one vertex to another</p>
+                        </div>
+                        <div class="type-item" style="border-color: #eab308;">
+                            <h4>Undirected Graph</h4>
+                            <p>Edges have no direction, connection is bidirectional</p>
+                        </div>
+                        <div class="type-item" style="border-color: #a855f7;">
+                            <h4>Weighted Graph</h4>
+                            <p>Edges have weights/costs associated with them</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3>Graph Representation</h3>
+                    <div class="grid-2">
+                        <div class="code-block">
+                            <h4 style="margin-bottom: 0.5rem;">Adjacency Matrix</h4>
+                            <p style="font-size: 0.75rem; margin-bottom: 0.5rem;">2D array where cell [i][j] = 1 if edge exists</p>
+                            <pre>  A B C
+A 0 1 1
+B 1 0 1
+C 1 1 0</pre>
+                        </div>
+                        <div class="code-block">
+                            <h4 style="margin-bottom: 0.5rem;">Adjacency List</h4>
+                            <p style="font-size: 0.75rem; margin-bottom: 0.5rem;">Array of lists showing neighbors</p>
+                            <pre>A: [B, C]
+B: [A, C]
+C: [A, B]</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3>Common Applications</h3>
+                    <ul style="list-style: none; color: #334155;">
+                        <li style="margin-bottom: 0.5rem;"><span style="color: #3b82f6;">•</span> Social networks (friends, followers)</li>
+                        <li style="margin-bottom: 0.5rem;"><span style="color: #3b82f6;">•</span> Maps and navigation (cities, roads)</li>
+                        <li style="margin-bottom: 0.5rem;"><span style="color: #3b82f6;">•</span> Computer networks (routers, connections)</li>
+                        <li style="margin-bottom: 0.5rem;"><span style="color: #3b82f6;">•</span> Web crawling (pages, links)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Visualize Page -->
+            <div id="visualize" class="page">
+                <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 1rem;">Interactive Graph Visualizer</h2>
+                
+                <div class="viz-grid">
+                    <div class="canvas-container">
+                        <canvas id="graphCanvas" width="450" height="350"></canvas>
+                        <div class="controls">
+                            <button class="btn btn-blue" onclick="addNode()">➕ Add Node</button>
+                            <button class="btn btn-green" onclick="addEdge()" id="addEdgeBtn">➕ Add Edge</button>
+                            <button class="btn btn-red" onclick="clearGraph()">🗑️ Clear</button>
+                            <select id="graphType" onchange="updateGraphType()">
+                                <option value="undirected">Undirected</option>
+                                <option value="directed">Directed</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="algo-panel">
+                        <h3>Algorithm Controls</h3>
+                        <select id="algoSelect" style="width: 100%; margin-bottom: 0.75rem;">
+                            <option value="bfs">BFS (Breadth-First)</option>
+                            <option value="dfs">DFS (Depth-First)</option>
+                        </select>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <button class="btn btn-green" onclick="startAlgorithm()" id="startBtn">▶️ Start</button>
+                            <button class="btn btn-yellow" onclick="resetVisualization()">🔄 Reset</button>
+                        </div>
+                        <div class="stats">
+                            <p>Nodes: <strong id="nodeCount">3</strong></p>
+                            <p>Edges: <strong id="edgeCount">3</strong></p>
+                            <p>Visited: <strong id="visitedCount">0</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Algorithms Page -->
+            <div id="algorithms" class="page">
+                <h2 style="font-size: 2rem; color: #1e293b; margin-bottom: 1.5rem;">Graph Algorithms</h2>
+                
+                <div class="section-card">
+                    <h3 style="font-size: 1.5rem;">Breadth-First Search (BFS)</h3>
+                    <p>BFS explores the graph level by level, visiting all neighbors of a node before moving to the next level. It uses a queue data structure and is excellent for finding shortest paths in unweighted graphs.</p>
+                    <div class="code-block">
+                        <h4 style="margin-bottom: 0.5rem;">Pseudocode:</h4>
+                        <pre>BFS(graph, start):
+    queue = [start]
+    visited = set()
+    
+    while queue is not empty:
+        node = queue.dequeue()
+        if node not in visited:
+            visit(node)
+            visited.add(node)
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.enqueue(neighbor)</pre>
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem;">
+                        <p style="font-size: 0.875rem; margin-bottom: 0.25rem;"><strong>Time Complexity:</strong> O(V + E) where V = vertices, E = edges</p>
+                        <p style="font-size: 0.875rem; margin: 0;"><strong>Space Complexity:</strong> O(V)</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3 style="font-size: 1.5rem;">Depth-First Search (DFS)</h3>
+                    <p>DFS explores as far as possible along each branch before backtracking. It uses a stack (or recursion) and is useful for detecting cycles, topological sorting, and finding connected components.</p>
+                    <div class="code-block">
+                        <h4 style="margin-bottom: 0.5rem;">Pseudocode:</h4>
+                        <pre>DFS(graph, node, visited):
+    visited.add(node)
+    visit(node)
+    
+    for neighbor in graph[node]:
+        if neighbor not in visited:
+            DFS(graph, neighbor, visited)</pre>
+                    </div>
+                    <div class="info-box" style="margin-top: 1rem; background: #f3e8ff; border-color: #a855f7;">
+                        <p style="font-size: 0.875rem; margin-bottom: 0.25rem;"><strong>Time Complexity:</strong> O(V + E)</p>
+                        <p style="font-size: 0.875rem; margin: 0;"><strong>Space Complexity:</strong> O(V) for recursion stack</p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h3 style="font-size: 1.5rem;">Dijkstra's Algorithm</h3>
+                    <p>Finds the shortest path from a source node to all other nodes in a weighted graph with non-negative weights. Uses a priority queue to always process the node with the smallest distance.</p>
+                    <div class="info-box" style="background: #dcfce7; border-color: #22c55e; margin-top: 1rem;">
+                        <p style="font-size: 0.875rem; margin-bottom: 0.25rem;"><strong>Time Complexity:</strong> O((V + E) log V) with priority queue</p>
+                        <p style="font-size: 0.875rem; margin: 0;"><strong>Use Case:</strong> GPS navigation, network routing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let nodes = [
+            { id: 0, x: 150, y: 100, label: 'A' },
+            { id: 1, x: 300, y: 100, label: 'B' },
+            { id: 2, x: 225, y: 220, label: 'C' }
+        ];
+        let edges = [
+            { from: 0, to: 1, weight: 1 },
+            { from: 1, to: 2, weight: 1 },
+            { from: 0, to: 2, weight: 1 }
+        ];
+        let graphType = 'undirected';
+        let nextNodeId = 3;
+        let visitedNodes = new Set();
+        let visitedEdges = new Set();
+        let isRunning = false;
+        let currentStep = 0;
+        let algorithmSteps = [];
+        let animationTimer = null;
+
+        // Page navigation
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            event.target.closest('.nav-btn').classList.add('active');
+            
+            if (pageName === 'visualize') {
+                updateStats();
+                drawGraph();
+            }
+        }
+
+        // Graph operations
+        function addNode() {
+            const newNode = {
+                id: nextNodeId,
+                x: Math.random() * 300 + 75,
+                y: Math.random() * 200 + 75,
+                label: String.fromCharCode(65 + nextNodeId)
+            };
+            nodes.push(newNode);
+            nextNodeId++;
+            updateStats();
+            drawGraph();
+        }
+
+        function addEdge() {
+            if (nodes.length < 2) return;
+            const from = nodes[Math.floor(Math.random() * nodes.length)].id;
+            let to = nodes[Math.floor(Math.random() * nodes.length)].id;
+            while (to === from && nodes.length > 1) {
+                to = nodes[Math.floor(Math.random() * nodes.length)].id;
+            }
+            edges.push({ from, to, weight: 1 });
+            updateStats();
+            drawGraph();
+        }
+
+        function clearGraph() {
+            nodes = [];
+            edges = [];
+            nextNodeId = 0;
+            resetVisualization();
+            updateStats();
+            drawGraph();
+        }
+
+        function updateGraphType() {
+            graphType = document.getElementById('graphType').value;
+            drawGraph();
+        }
+
+        function updateStats() {
+            document.getElementById('nodeCount').textContent = nodes.length;
+            document.getElementById('edgeCount').textContent = edges.length;
+            document.getElementById('visitedCount').textContent = visitedNodes.size;
+            document.getElementById('addEdgeBtn').disabled = nodes.length < 2;
+        }
+
+        // Drawing
+        function drawGraph() {
+            const canvas = document.getElementById('graphCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw edges
+            edges.forEach(edge => {
+                const fromNode = nodes.find(n => n.id === edge.from);
+                const toNode = nodes.find(n => n.id === edge.to);
+                if (!fromNode || !toNode) return;
+
+                const edgeKey = `${edge.from}-${edge.to}`;
+                const isVisited = visitedEdges.has(edgeKey) || visitedEdges.has(`${edge.to}-${edge.from}`);
+
+                ctx.beginPath();
+                ctx.moveTo(fromNode.x, fromNode.y);
+                ctx.lineTo(toNode.x, toNode.y);
+                ctx.strokeStyle = isVisited ? '#3b82f6' : '#cbd5e1';
+                ctx.lineWidth = isVisited ? 3 : 2;
+                ctx.stroke();
+
+                if (graphType === 'directed') {
+                    const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                    const arrowSize = 10;
+                    const tipX = toNode.x - Math.cos(angle) * 25;
+                    const tipY = toNode.y - Math.sin(angle) * 25;
+
+                    ctx.beginPath();
+                    ctx.moveTo(tipX, tipY);
+                    ctx.lineTo(
+                        tipX - arrowSize * Math.cos(angle - Math.PI / 6),
+                        tipY - arrowSize * Math.sin(angle - Math.PI / 6)
+                    );
+                    ctx.moveTo(tipX, tipY);
+                    ctx.lineTo(
+                        tipX - arrowSize * Math.cos(angle + Math.PI / 6),
+                        tipY - arrowSize * Math.sin(angle + Math.PI / 6)
+                    );
+                    ctx.strokeStyle = isVisited ? '#3b82f6' : '#cbd5e1';
+                    ctx.stroke();
+                }
+            });
+
+            // Draw nodes
+            nodes.forEach(node => {
+                const isVisited = visitedNodes.has(node.id);
+
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 20, 0, 2 * Math.PI);
+                ctx.fillStyle = isVisited ? '#3b82f6' : '#ffffff';
+                ctx.fill();
+                ctx.strokeStyle = isVisited ? '#2563eb' : '#64748b';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = isVisited ? '#ffffff' : '#1e293b';
+                ctx.font = 'bold 14px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.label, node.x, node.y);
+            });
+        }
+
+        // Algorithms
+        function runBFS(startNode) {
+            const steps = [];
+            const visited = new Set();
+            const queue = [startNode];
+
+            while (queue.length > 0) {
+                const current = queue.shift();
+
+                if (!visited.has(current)) {
+                    visited.add(current);
+                    steps.push({ type: 'visit', node: current });
+
+                    const neighbors = edges
+                        .filter(e => e.from === current || (graphType === 'undirected' && e.to === current))
+                        .map(e => e.from === current ? e.to : e.from)
+                        .filter(n => !visited.has(n));
+
+                    neighbors.forEach(neighbor => {
+                        if (!visited.has(neighbor) && !queue.includes(neighbor)) {
+                            queue.push(neighbor);
+                            steps.push({ type: 'edge', from: current, to: neighbor });
+                        }
+                    });
+                }
+            }
+
+            return steps;
+        }
+
+        function runDFS(startNode) {
+            const steps = [];
+            const visited = new Set();
+
+            function dfsRecursive(node) {
+                visited.add(node);
+                steps.push({ type: 'visit', node });
+
+                const neighbors = edges
+                    .filter(e => e.from === node || (graphType === 'undirected' && e.to === node))
+                    .map(e => e.from === node ? e.to : e.from)
+                    .filter(n => !visited.has(n));
+
+                neighbors.forEach(neighbor => {
+                    if (!visited.has(neighbor)) {
+                        steps.push({ type: 'edge', from: node, to: neighbor });
+                        dfsRecursive(neighbor);
+                    }
+                });
+            }
+
+            dfsRecursive(startNode);
+            return steps;
+        }
+
+        function startAlgorithm() {
+            if (nodes.length === 0) return;
+
+            visitedNodes = new Set();
+            visitedEdges = new Set();
+            currentStep = 0;
+
+            const algo = document.getElementById('algoSelect').value;
+            algorithmSteps = algo === 'bfs' ? runBFS(nodes[0].id) : runDFS(nodes[0].id);
+            isRunning = true;
+            document.getElementById('startBtn').disabled = true;
+            runAnimation();
+        }
+
+        function runAnimation() {
+            if (!isRunning || currentStep >= algorithmSteps.length) {
+                isRunning = false;
+                document.getElementById('startBtn').disabled = false;
+                return;
+            }
+
+            const step = algorithmSteps[currentStep];
+
+            if (step.type === 'visit') {
+                visitedNodes.add(step.node);
+            } else if (step.type === 'edge') {
+                visitedEdges.add(`${step.from}-${step.to}`);
+            }
+
+            updateStats();
+            drawGraph();
+            currentStep++;
+
+            animationTimer = setTimeout(runAnimation, 800);
+        }
+
+        function resetVisualization() {
+            if (animationTimer) clearTimeout(animationTimer);
+            isRunning = false;
+            visitedNodes = new Set();
+            visitedEdges = new Set();
+            currentStep = 0;
+            algorithmSteps = [];
+            document.getElementById('startBtn').disabled = false;
+            updateStats();
+            drawGraph();
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            drawGraph();
+            updateStats();
+        });
+    </script>
+</body>
+</html>

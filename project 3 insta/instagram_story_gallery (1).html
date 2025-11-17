@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Story Poster Gallery</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .story-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .story-preview {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            color: white;
+        }
+        
+        .story-info {
+            padding: 25px;
+            background: white;
+        }
+        
+        .story-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .story-description {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .story-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tag {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* Individual Story Designs */
+        .story-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .story-1 .date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .story-1 .main-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+        
+        .story-1 .sub-text {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .story-1 .brand {
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .story-2 {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            text-align: center;
+        }
+        
+        .story-2 .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #e74c3c;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        
+        .story-2 .speaker {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .story-2 .talk-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        
+        .story-2 .quote {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        
+        .story-3 {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+        
+        .story-3 .hashtag {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .story-3 .campaign-title {
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+        }
+        
+        .story-3 .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+        
+        .story-3 .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .story-3 .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .story-3 .cta {
+            background: rgba(85, 126, 80, 0.2);
+            border: 2px solid rgb(16, 16, 16);
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+        
+        .story-4 {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2c3e50;
+        }
+        
+        .story-4 .designer-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .story-4 .role {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+        
+        .story-4 .project-title {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        
+        .story-4 .project-type {
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+        
+        .story-4 .visual-element {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+        
+        .story-4 .contact {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .story-5 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+        }
+        
+        .story-5 .event-date {
+            margin-bottom: 30px;
+        }
+        
+        .story-5 .day {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 0.8;
+            display: block;
+        }
+        
+        .story-5 .month-year {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .story-5 .event-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 15px;
+        }
+        
+        .story-5 .event-subtitle {
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .story-5 .venue {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+        
+        .story-5 .time {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #e9ecef;
+            margin-top: 60px;
+        }
+        
+        .footer-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .download-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .download-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 16px;
+        }
+        
+        .download-text {
+            color: #6c757d;
+            margin-bottom: 25px;
+        }
+        
+        .download-btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .download-btn:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Instagram Story Poster Gallery</h1>
+            <p class="subtitle">A curated collection of professional Instagram Story designs perfect for social media marketing, personal branding, and creative campaigns</p>
+        </header>
+
+        <main>
+            <section class="gallery">
+                <article class="story-card">
+                    <div class="story-preview story-1">
+                        <div class="top-content">
+                            <div class="date">March 2024</div>
+                            <h2 class="main-text">Creative<br>Vision</h2>
+                            <p class="sub-text">Exploring the intersection of art, design, and human emotion</p>
+                        </div>
+                        <div class="bottom-content">
+                            <div class="brand">STUDIO</div>
+                        </div>
+                    </div>
+                    <div class="story-info">
+                        <h3 class="story-title">Minimalist Moodboard</h3>
+                        <p class="story-description">Clean and elegant design perfect for creative agencies and design studios</p>
+                        <div class="story-tags">
+                            <span class="tag">Creative</span>
+                            <span class="tag">Minimalist</span>
+                            <span class="tag">Studio</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="story-card">
+                    <div class="story-preview story-2">
+                        <div class="top-content">
+                            <div class="logo">TEDx</div>
+                            <div class="speaker">Sarah Chen</div>
+                        </div>
+                        <div class="middle-content">
+                            <h2 class="talk-title">The Future of Human Connection</h2>
+                            <p class="quote">"Technology should amplify our humanity, not replace it"</p>
+                        </div>
+                        <div class="bottom-content">
+                            <div class="event-info">TEDxSanFrancisco • March 15, 2024</div>
+                        </div>
+                    </div>
+                    <div class="story-info">
+                        <h3 class="story-title">TEDx Speaker Announcement</h3>
+                        <p class="story-description">Professional speaker introduction template for conferences and events</p>
+                        <div class="story-tags">
+                            <span class="tag">TEDx</span>
+                            <span class="tag">Speaker</span>
+                            <span class="tag">Conference</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="story-card">
+                    <div class="story-preview story-3">
+                        <div class="top-content">
+                            <div class="hashtag">#ClimateAction</div>
+                            <h2 class="campaign-title">Our Planet<br>Our Future</h2>
+                        </div>
+                        <div class="middle-content">
+                            <div class="stats">
+                                <div class="stat">
+                                    <span class="stat-number">2.5M</span>
+                                    <span class="stat-label">Supporters</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">150</span>
+                                    <span class="stat-label">Cities</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bottom-content">
+                            <div  class="cta"><a href="open"><button style=" background: rgba(131, 194, 123, 0.2); border: #59a16a; font-size: medium;"> Join Movement</button></a></div>
+                        </div>
+                    </div>
+                    <div class="story-info">
+                        <h3 class="story-title">Social Campaign</h3>
+                        <p class="story-description">Impactful design for social causes and awareness campaigns</p>
+                        <div class="story-tags">
+                            <span class="tag">Campaign</span>
+                            <span class="tag">Social</span>
+                            <span class="tag">Environment</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="story-card">
+                    <div class="story-preview story-4">
+                        <div class="top-content">
+                            <h2 class="designer-name">Alex Rivera</h2>
+                            <div class="role">Visual Designer</div>
+                        </div>
+                        <div class="middle-content">
+                            <h3 class="project-title">Brand<br>Identity</h3>
+                            <div class="project-type">Digital Experience Design</div>
+                            <div class="visual-element"></div>
+                        </div>
+                        <div class="bottom-content">
+                            <div class="contact">hello@alexrivera.com</div>
+                        </div>
+                    </div>
+                    <div class="story-info">
+                        <h3 class="story-title">Creative Portfolio</h3>
+                        <p class="story-description">Professional portfolio showcase for designers and creative professionals</p>
+                        <div class="story-tags">
+                            <span class="tag">Portfolio</span>
+                            <span class="tag">Designer</span>
+                            <span class="tag">Creative</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="story-card">
+                    <div class="story-preview story-5">
+                        <div class="top-content">
+                            <div class="event-date">
+                                <span class="day">25</span>
+                                <span class="month-year">June 2024</span>
+                            </div>
+                        </div>
+                        <div class="middle-content">
+                            <h2 class="event-title">Design Conference</h2>
+                            <p class="event-subtitle">Where creativity meets innovation in the digital age</p>
+                        </div>
+                        <div class="bottom-content">
+                            <div class="venue">Convention Center</div>
+                            <div class="time">9:00 AM - 6:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="story-info">
+                        <h3 class="story-title">Event Announcement</h3>
+                        <p class="story-description">Corporate event promotion template for conferences and seminars</p>
+                        <div class="story-tags">
+                            <span class="tag">Event</span>
+                            <span class="tag">Conference</span>
+                            <span class="tag">Corporate</span>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="download-section">
+                <h2 class="download-title">Ready to Use These Designs?</h2>
+                <p class="download-text">All designs are optimized for Instagram Stories (1080x1920px) and ready for immediate use in your social media campaigns</p>
+               <a href="download"><button  class="download-btn">Download All Templates</button>
+            </section>
+        </main>
+
+        <footer>
+            <p class="footer-text">Instagram Story Poster Gallery • Designed for modern social media marketing</p>
+        </footer>
+    </div>
+</body>
+</html>

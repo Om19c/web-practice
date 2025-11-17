@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Loss Recovery Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .auth-buttons {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .logout-btn {
+            background: #f56565;
+        }
+
+        .logout-btn:hover {
+            background: #e53e3e;
+        }
+
+        .firebase-status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .status-connected {
+            background: #48bb78;
+            color: white;
+        }
+
+        .status-disconnected {
+            background: #f56565;
+            color: white;
+        }
+
+        .status-loading {
+            background: #ed8936;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            color: #a0aec0;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-modal:hover {
+            color: #2d3748;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #2d3748;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+        }
+
+        .toggle-form a {
+            color: #667eea;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .welcome-card h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .farmer-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .info-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .personalized-tag {
+            background: #ffd700;
+            color: #2d3748;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+
+        .card-title {
+            font-size: 1.8em;
+            color: #2d3748;
+        }
+
+        .scheme-item, .market-item, .crop-item {
+            background: #f7fafc;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .scheme-item:hover, .market-item:hover, .crop-item:hover {
+            background: #edf2f7;
+            transform: translateX(5px);
+        }
+
+        .scheme-item.highlighted, .market-item.highlighted, .crop-item.highlighted {
+            border-left: 4px solid #ffd700;
+            background: #fffbeb;
+        }
+
+        .scheme-name, .market-name, .crop-name {
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .scheme-desc, .market-info, .crop-info {
+            color: #4a5568;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .link-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .link-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .weather-widget {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .weather-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .weather-item {
+            text-align: center;
+            padding: 15px;
+        }
+
+        .weather-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .weather-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .filter-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-bottom: 15px;
+            transition: border 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .price-tag {
+            background: #48bb78;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .season-badge {
+            background: #ed8936;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #718096;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .auth-buttons {
+                position: static;
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Farmer Loss Recovery Portal</h1>
+            <p class="tagline">Your Complete Guide to Government Schemes, Market Prices & Smart Farming</p>
+            <div id="firebaseStatus" class="firebase-status status-disconnected">⚠ Database Not Connected</div>
+            
+            <div class="auth-buttons">
+                <button class="auth-btn" id="loginBtn" onclick="showLogin()">Login</button>
+                <button class="auth-btn" id="registerBtn" onclick="showRegister()">Register</button>
+                <button class="auth-btn logout-btn hidden" id="logoutBtn" onclick="logout()">Logout</button>
+            </div>
+        </header>
+
+        <!-- Registration Modal -->
+        <div id="registerModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal('registerModal')">&times;</span>
+                <h2 style="color: #2d3748; margin-bottom: 30px;">👨‍🌾 Farmer Registration</h2>
+                
+                <form id="registerForm" onsubmit="registerFarmer(event)">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="regName" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mobile Number *</label>
+                        <input type="tel" id="regMobile" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email (Optional)</label>
+                        <input type="email" id="regEmail" placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="regPassword" required placeholder="Create a password" minlength="6">
+                    </div>
+
+                    <div class="form-group">
+                        <label>State *</label>
+                        <select id="regState" required>
+                            <option value="">Select State</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>District *</label>
+                        <input type="text" id="regDistrict" required placeholder="Enter your district">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Land Size (in acres) *</label>
+                        <input type="number" id="regLandSize" required placeholder="Enter land size" step="0.1" min="0.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Primary Crop *</label>
+                        <select id="regPrimaryCrop" required>
+                            <option value="">Select Primary Crop</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="rice">Rice</option>
+                            <option value="cotton">Cotton</option>
+                            <option value="sugarcane">Sugarcane</option>
+                            <option value="soybean">Soybean</option>
+                            <option value="maize">Maize</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Farming Experience (years) *</label>
+                        <input type="number" id="regExperience" required placeholder="Years of experience" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Have you faced crop loss? *</label>
+                        <select id="regCropLoss" required>
+                            <option value="">Select</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type of Loss (if any)</label>
+                        <textarea id="regLossType" rows="3" placeholder="Describe the type of loss (drought, flood, pest, etc.)"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Register Now</button>
+                    
+                    <div class="toggle-form">
+                        Already have an account? <a onclick="showLogin()">Login here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div id="loginModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
+                <h2 style="color: #2d3748; margin-bottom: 30px;">🔐 Farmer Login</h2>
+                
+                <form id="loginForm" onsubmit="loginFarmer(event)">
+                    <div class="form-group">
+                        <label>Mobile Number *</label>
+                        <input type="tel" id="loginMobile" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password *</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="submit-btn">Login</button>
+                    
+                    <div class="toggle-form">
+                        Don't have an account? <a onclick="showRegister()">Register here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Personalized Welcome Card -->
+        <div id="welcomeCard" class="welcome-card hidden">
+            <h2>Welcome back, <span id="farmerName">Farmer</span>! 🎉</h2>
+            <p>Here's your personalized dashboard based on your profile</p>
+            <div class="farmer-info">
+                <div class="info-item">
+                    <div class="info-label">Location</div>
+                    <div class="info-value" id="farmerLocation">--</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Land Size</div>
+                    <div class="info-value" id="farmerLand">-- acres</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Primary Crop</div>
+                    <div class="info-value" id="farmerCrop">--</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Experience</div>
+                    <div class="info-value" id="farmerExp">-- years</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="weather-widget">
+            <h2 style="margin-bottom: 20px; text-align: center;">🌤 Weather Conditions</h2>
+            <div class="weather-content">
+                <div class="weather-item">
+                    <div class="weather-label">Temperature</div>
+                    <div class="weather-value" id="temp">28°C</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-label">Humidity</div>
+                    <div class="weather-value" id="humidity">65%</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-label">Rainfall</div>
+                    <div class="weather-value" id="rainfall">Light</div>
+                </div>
+                <div class="weather-item">
+                    <div class="weather-label">Wind Speed</div>
+                    <div class="weather-value" id="wind">12 km/h</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Government Schemes Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">🏛</div>
+                    <h2 class="card-title">Government Schemes <span id="schemesPersonalized"></span></h2>
+                </div>
+                
+                <div class="filter-section">
+                    <label><strong>Filter by Loss Type:</strong></label>
+                    <select id="lossFilter" onchange="filterSchemes()">
+                        <option value="all">All Schemes</option>
+                        <option value="crop">Crop Loss</option>
+                        <option value="natural">Natural Disaster</option>
+                        <option value="price">Price Drop</option>
+                        <option value="loan">Loan Relief</option>
+                    </select>
+                </div>
+
+                <div id="schemesList"></div>
+            </div>
+
+            <!-- Market Prices Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="icon">📊</div>
+                    <h2 class="card-title">Market Prices <span id="marketsPersonalized"></span></h2>
+                </div>
+
+                <div class="filter-section">
+                    <label><strong>Select Your Crop:</strong></label>
+                    <select id="cropFilter" onchange="filterMarkets()">
+                        <option value="all">All Crops</option>
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Rice</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="soybean">Soybean</option>
+                    </select>
+                </div>
+
+                <div id="marketsList"></div>
+            </div>
+        </div>
+
+        <!-- Seasonal Crop Recommendations -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon">🌱</div>
+                <h2 class="card-title">Seasonal Crop Recommendations <span id="cropsPersonalized"></span></h2>
+            </div>
+
+            <div class="filter-section">
+                <label><strong>Select Season:</strong></label>
+                <select id="seasonFilter" onchange="filterCrops()">
+                    <option value="all">All Seasons</option>
+                    <option value="kharif">Kharif (Monsoon)</option>
+                    <option value="rabi">Rabi (Winter)</option>
+                    <option value="zaid">Zaid (Summer)</option>
+                </select>
+            </div>
+
+            <div id="cropsList"></div>
+        </div>
+    </div>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA3Ugc0rX9DC1TIhfvSUMKCdADooa1IucA",
+    authDomain: "farmer-loss-recovery.firebaseapp.com",
+    databaseURL: "https://farmer-loss-recovery-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "farmer-loss-recovery",
+    storageBucket: "farmer-loss-recovery.firebasestorage.app",
+    messagingSenderId: "836691437167",
+    appId: "1:836691437167:web:b78014e5a6fa20e5e3cf9a",
+    measurementId: "G-KBM8K0EVM7"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+        database.ref(".info/connected").on("value", (snapshot) => {
+  const connected = snapshot.val();
+  const statusEl = document.getElementById("firebaseStatus");
+  if (connected) {
+    statusEl.textContent = "✅ Database Connected";
+    statusEl.className = "firebase-status status-connected";
+  } else {
+    statusEl.textContent = "⚠ Database Not Connected";
+    statusEl.className = "firebase-status status-disconnected";
+  }
+});
+
+        
+        let schemesData = [];
+        let marketsData = [];
+        let cropsData = [];
+        let currentUser = null;
+
+        // Modal functions
+        function showRegister() {
+            closeModal('loginModal');
+            document.getElementById('registerModal').style.display = 'block';
+        }
+
+        function showLogin() {
+            closeModal('registerModal');
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Registration
+        function registerFarmer(event) {
+            event.preventDefault();
+            
+            const farmerData = {
+                name: document.getElementById('regName').value,
+                mobile: document.getElementById('regMobile').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                state: document.getElementById('regState').value,
+                district: document.getElementById('regDistrict').value,
+                landSize: document.getElementById('regLandSize').value,
+                primaryCrop: document.getElementById('regPrimaryCrop').value,
+                experience: document.getElementById('regExperience').value,
+                cropLoss: document.getElementById('regCropLoss').value,
+                lossType: document.getElementById('regLossType').value,
+                registeredOn: new Date().toISOString()
+            };
+
+            if (database) {
+                database.ref('farmers/' + farmerData.mobile).set(farmerData)
+                    .then(() => {
+                        alert('✅ Registration successful! Please login.');
+                        closeModal('registerModal');
+                        document.getElementById('registerForm').reset();
+                        showLogin();
+                    })
+                    .catch((error) => {
+                        alert('❌ Registration failed: ' + error.message);
+                    });
+            } else {
+                localStorage.setItem('farmer_' + farmerData.mobile, JSON.stringify(farmerData));
+                alert('✅ Registration successful! (Saved locally) Please login.');
+                closeModal('registerModal');
+                document.getElementById('registerForm').reset();
+                showLogin();
+            }
+        }
+
+        // Login
+        function loginFarmer(event) {
+            event.preventDefault();
+            
+            const mobile = document.getElementById('loginMobile').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (database) {
+                database.ref('farmers/' + mobile).once('value')
+                    .then((snapshot) => {
+                        const farmer = snapshot.val();
+                        if (farmer && farmer.password === password) {
+                            currentUser = farmer;
+                            localStorage.setItem('currentFarmer', JSON.stringify(farmer));
+                            closeModal('loginModal');
+                            showUserDashboard();
+                            alert('✅ Login successful! Welcome ' + farmer.name);
+                        } else {
+                            alert('❌ Invalid mobile number or password!');
+                        }
+                    })
+                    .catch((error) => {
+                        alert('❌ Login failed: ' + error.message);
+                    });
+            } else {
+                const farmerData = localStorage.getItem('farmer_' + mobile);
+                if (farmerData) {
+                    const farmer = JSON.parse(farmerData);
+                    if (farmer.password === password) {
+                        currentUser = farmer;
+                        localStorage.setItem('currentFarmer', JSON.stringify(farmer));
+                        closeModal('loginModal');
+                        showUserDashboard();
+                        alert('✅ Login successful! Welcome ' + farmer.name);
+                    } else {
+                        alert('❌ Invalid password!');
+                    }
+                } else {
+                    alert('❌ Farmer not found! Please register first.');
+                }
+            }
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                localStorage.removeItem('currentFarmer');
+                hideUserDashboard();
+                alert('✅ Logged out successfully!');
+            }
+        }
+
+        // Show user dashboard
+        function showUserDashboard() {
+            document.getElementById('loginBtn').classList.add('hidden');
+            document.getElementById('registerBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            
+            document.getElementById('welcomeCard').classList.remove('hidden');
+            document.getElementById('farmerName').textContent = currentUser.name;
+            document.getElementById('farmerLocation').textContent = currentUser.district + ', ' + currentUser.state;
+            document.getElementById('farmerLand').textContent = currentUser.landSize + ' acres';
+            document.getElementById('farmerCrop').textContent = currentUser.primaryCrop.charAt(0).toUpperCase() + currentUser.primaryCrop.slice(1);
+            document.getElementById('farmerExp').textContent = currentUser.experience + ' years';
+            
+            document.getElementById('schemesPersonalized').innerHTML = '<span class="personalized-tag">Personalized for You</span>';
+            document.getElementById('marketsPersonalized').innerHTML = '<span class="personalized-tag">Best for ' + currentUser.primaryCrop + '</span>';
+            document.getElementById('cropsPersonalized').innerHTML = '<span class="personalized-tag">For ' + currentUser.state + '</span>';
+            
+            personalizeContent();
+        }
+
+        // Hide user dashboard
+        function hideUserDashboard() {
+            document.getElementById('loginBtn').classList.remove('hidden');
+            document.getElementById('registerBtn').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            
+            document.getElementById('welcomeCard').classList.add('hidden');
+            document.getElementById('schemesPersonalized').innerHTML = '';
+            document.getElementById('marketsPersonalized').innerHTML = '';
+            document.getElementById('cropsPersonalized').innerHTML = '';
+            
+            displaySchemes(schemesData);
+            displayMarkets(marketsData);
+            displayCrops(cropsData);
+        }
+
+        // Personalize content
+        function personalizeContent() {
+            if (!currentUser) return;
+            
+            const cropLossSchemes = schemesData.filter(s => s.type === 'crop');
+            displaySchemes(schemesData);
+            cropLossSchemes.forEach(scheme => {
+                const items = document.querySelectorAll('.scheme-item');
+                items.forEach(item => {
+                    if (item.querySelector('.scheme-name').textContent === scheme.name) {
+                        item.classList.add('highlighted');
+                    }
+                });
+            });
+            
+            const userCropMarkets = marketsData.filter(m => m.crop === currentUser.primaryCrop);
+            displayMarkets(marketsData);
+            userCropMarkets.forEach(market => {
+                const items = document.querySelectorAll('.market-item');
+                items.forEach(item => {
+                    if (item.dataset.crop === currentUser.primaryCrop) {
+                        item.classList.add('highlighted');
+                    }
+                });
+            });
+            
+            displayCrops(cropsData);
+        }
+
+        // Display functions
+        function displaySchemes(schemes) {
+            const container = document.getElementById('schemesList');
+            container.innerHTML = '';
+
+            schemes.forEach(scheme => {
+                const div = document.createElement('div');
+                div.className = 'scheme-item';
+                div.dataset.type = scheme.type || 'crop';
+                div.innerHTML = `
+                    <div class="scheme-name">${scheme.name}</div>
+                    <div class="scheme-desc">${scheme.description}</div>
+                    <a href="${scheme.link}" target="_blank" class="link-btn">Apply Now →</a>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function displayMarkets(markets) {
+            const container = document.getElementById('marketsList');
+            container.innerHTML = '';
+
+            markets.forEach(market => {
+                const div = document.createElement('div');
+                div.className = 'market-item';
+                div.dataset.crop = market.crop || 'wheat';
+                div.innerHTML = `
+                    <div class="market-name">${market.name}</div>
+                    <div class="market-info">${market.info}</div>
+                    <div class="price-tag">₹${market.price}/quintal</div>
+                    <a href="${market.link}" target="_blank" class="link-btn">View Details →</a>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function displayCrops(crops) {
+            const container = document.getElementById('cropsList');
+            container.innerHTML = '';
+
+            crops.forEach(crop => {
+                const div = document.createElement('div');
+                div.className = 'crop-item';
+                div.dataset.season = crop.season || 'all';
+                
+                let badges = '';
+                if (crop.crops && Array.isArray(crop.crops)) {
+                    badges = crop.crops.map(c => <span class="season-badge">${c}</span>).join('');
+                }
+                
+                div.innerHTML = `
+                    <div class="crop-name">${crop.name}</div>
+                    <div class="crop-info">${badges}</div>
+                    <div class="scheme-desc">${crop.info}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Filter functions
+        function filterSchemes() {
+            const filter = document.getElementById('lossFilter').value;
+            const items = document.querySelectorAll('.scheme-item');
+            
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.type === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function filterMarkets() {
+            const filter = document.getElementById('cropFilter').value;
+            const items = document.querySelectorAll('.market-item');
+            
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.crop === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function filterCrops() {
+            const filter = document.getElementById('seasonFilter').value;
+            const items = document.querySelectorAll('.crop-item');
+            
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.season === filter || item.dataset.season === 'all') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Load demo data
+        function loadDemoData() {
+            schemesData = [
+                {
+                    name: "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+                    description: "Comprehensive crop insurance covering pre-sowing to post-harvest losses. Premium subsidy up to 90% for small farmers.",
+                    type: "crop",
+                    link: "https://pmfby.gov.in/"
+                },
+                {
+                    name: "National Disaster Relief Fund (NDRF)",
+                    description: "Immediate financial assistance for farmers affected by floods, droughts, cyclones, and other natural calamities.",
+                    type: "natural",
+                    link: "https://ndrf.gov.in/"
+                },
+                {
+                    name: "Kisan Credit Card (KCC)",
+                    description: "Easy access to credit with interest subvention of 2%. Loan waiver schemes available for distressed farmers.",
+                    type: "loan",
+                    link: "https://www.india.gov.in/spotlight/kisan-credit-card-kcc"
+                },
+                {
+                    name: "PM-AASHA (Price Support Scheme)",
+                    description: "Ensures minimum support price (MSP) for crops. Direct procurement by government at MSP rates.",
+                    type: "price",
+                    link: "https://agricoop.nic.in/"
+                }
+            ];
+
+            marketsData = [
+                {
+                    name: "🌾 Wheat - Punjab Mandi",
+                    crop: "wheat",
+                    price: "2125",
+                    info: "Highest price in North India. Premium quality wheat fetching top rates.",
+                    link: "https://agmarknet.gov.in/"
+                },
+                {
+                    name: "🍚 Rice - Andhra Pradesh Markets",
+                    crop: "rice",
+                    price: "2040",
+                    info: "Best prices for basmati and non-basmati varieties. Strong export demand.",
+                    link: "https://agmarknet.gov.in/"
+                },
+                {
+                    name: "🌱 Cotton - Gujarat Cotton Market",
+                    crop: "cotton",
+                    price: "6620",
+                    info: "Premium rates for long-staple cotton. Direct mill purchases available.",
+                    link: "https://agmarknet.gov.in/"
+                },
+                {
+                    name: "🎋 Sugarcane - Maharashtra Mills",
+                    crop: "sugarcane",
+                    price: "315",
+                    info: "Highest FRP payment. Multiple sugar mills ensuring timely procurement.",
+                    link: "https://agmarknet.gov.in/"
+                },
+                {
+                    name: "🌿 Soybean - Madhya Pradesh APMC",
+                    crop: "soybean",
+                    price: "4600",
+                    info: "Strong demand from oil mills. Premium for high oil content beans.",
+                    link: "https://agmarknet.gov.in/"
+                }
+            ];
+
+            cropsData = [
+                {
+                    name: "🌾 Kharif Season (June-October)",
+                    season: "kharif",
+                    crops: ["Rice", "Cotton", "Soybean", "Maize", "Bajra"],
+                    info: "Best suited for monsoon cultivation. High rainfall requirement. Market demand peaks in November-December."
+                },
+                {
+                    name: "❄ Rabi Season (October-March)",
+                    season: "rabi",
+                    crops: ["Wheat", "Barley", "Mustard", "Chickpea", "Lentils"],
+                    info: "Cool season crops. Requires irrigation. Excellent market prices during April-May harvest."
+                },
+                {
+                    name: "☀ Zaid Season (March-June)",
+                    season: "zaid",
+                    crops: ["Watermelon", "Cucumber", "Bitter Gourd", "Pumpkin", "Tomato"],
+                    info: "Short duration crops. High water requirement. Premium prices due to off-season production."
+                }
+            ];
+
+            displaySchemes(schemesData);
+            displayMarkets(marketsData);
+            displayCrops(cropsData);
+        }
+
+        // Initialize on page load
+        window.onload = function() {

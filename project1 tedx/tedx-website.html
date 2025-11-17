@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEDx College Club - Ideas Worth Spreading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Theme */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --bg-tertiary: #111827;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --text-inverse: #ffffff;
+            --border-color: #e5e7eb;
+            --border-dark: #374151;
+            --accent-color: #dc2626;
+            --accent-hover: #b91c1c;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --admin-bg: #ffffff;
+            --modal-bg: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #ffffff;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --text-tertiary: #6b7280;
+            --text-inverse: #111827;
+            --border-color: #374151;
+            --border-dark: #4b5563;
+            --accent-color: #ef4444;
+            --accent-hover: #dc2626;
+            --card-bg: #1f2937;
+            --header-bg: rgba(17, 24, 39, 0.95);
+            --admin-bg: #1f2937;
+            --modal-bg: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: var(--admin-bg);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            z-index: 1500;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .admin-panel.active {
+            right: 0;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .admin-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0.25rem;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-color);
+        }
+
+        .admin-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            background: var(--bg-secondary);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--admin-bg);
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .form-group textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 0.25rem;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .speakers-list,
+        .events-list {
+            margin-top: 1rem;
+        }
+
+        .speaker-item,
+        .event-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .speaker-item h5,
+        .event-item h5 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .speaker-item p,
+        .event-item p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .item-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+            border: none;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+        }
+
+        /* Social Links Styles */
+        .social-links {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link.instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+        }
+
+        .social-link.youtube {
+            background: #ff0000;
+            color: white;
+        }
+
+        .social-link.facebook {
+            background: #1e24c0;
+            color: white;
+        }
+
+        .social-link:hover {
+            transform: scale(1.1);
+        }
+
+        .social-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--modal-bg);
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--admin-bg);
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            padding: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-inverse);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Theme Toggle Button in Header */
+        .theme-btn {
+            background: var(--accent-color);
+            color: var(--text-inverse);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 5rem;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .highlight {
+            color: var(--accent-color);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: var(--text-inverse);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-secondary);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            background: transparent;
+        }
+
+        .btn-small:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 32rem;
+            margin: 0 auto;
+        }
+
+        /* Speakers Section */
+        .speakers {
+            padding: 5rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .speakers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .speaker-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .speaker-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .speaker-image {
+            position: relative;
+            height: 16rem;
+            overflow: hidden;
+        }
+
+        .speaker-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .year-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent-color);
+            color: var(--text-inverse);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .speaker-info {
+            padding: 1.5rem;
+        }
+
+        .speaker-info h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .speaker-title {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .speaker-info h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .speaker-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .speaker-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .speaker-footer-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .duration {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Events Section */
+        .events {
+            padding: 5rem 0;
+            background: var(--bg-primary);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .event-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-theme {
+            color: var(--accent-color);
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .event-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .event-detail {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .event-detail .icon {
+            font-size: 1rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 5rem 0;
+            background: var(--bg-secondary);
+        }
+
+        .about-content {
+            text-align: center;
+            max-width: 64rem;
+            margin: 0 auto;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+        }
+
+        .about-content > p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            text-align: center;
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .value-card p {
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-tertiary);
+            color: var(--text-inverse);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-inverse);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer-logo span {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .footer-section h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--text-tertiary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-inverse);
+        }
+
+        .footer-section p {
+            color: var(--text-tertiary);
+        }
+
+        /* Admin Section in Footer */
+        .admin-section {
+            border-top: 1px solid var(--border-dark);
+            padding-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-toggle-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-dark);
+        }
+
+        .admin-toggle-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-toggle-header h4 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-inverse);
+        }
+
+        .admin-toggle-icon {
+            margin-left: 0.5rem;
+            font-size: 0.875rem;
+            transition: transform 0.3s ease;
+            color: var(--text-tertiary);
+        }
+
+        .admin-toggle-header.active .admin-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .admin-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .admin-content.active {
+            max-height: 200px;
+        }
+
+        .admin-content-inner {
+            padding: 1.5rem 0 0.5rem;
+            text-align: center;
+        }
+
+        .admin-btn {
+            background: var(--accent-color);
+            color: var(--text-inverse);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .admin-description {
+            margin-top: 1rem;
+            color: var(--text-tertiary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-dark);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-tertiary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .admin-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+            .nav-container {
+                gap: 1rem;
+            }
+
+            .nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--header-bg);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                gap: 1rem;
+            }
+
+            .nav.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .hero {
+                padding: 6rem 0 3rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .speakers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .speaker-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .speaker-card {
+                margin: 0 10px;
+            }
+
+            .nav-container {
+                gap: 0.5rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Focus styles for accessibility */
+        .btn:focus,
+        .nav a:focus,
+        .theme-btn:focus,
+        .admin-btn:focus,
+        .admin-toggle-header:focus {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-header">
+            <h3>Content Management</h3>
+            <button onclick="toggleAdminPanel()" class="close-btn">×</button>
+        </div>
+        
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="showTab('club-info')">Club Info</button>
+            <button class="tab-btn" onclick="showTab('speakers')">Speakers</button>
+            <button class="tab-btn" onclick="showTab('events')">Events</button>
+        </div>
+
+        <!-- Club Info Tab -->
+        <div id="club-info" class="tab-content active">
+            <h4>Club Information</h4>
+            <div class="form-group">
+                <label>Club Name:</label>
+                <input type="text" id="clubName" value="TEDx College Club" onchange="updateClubInfo()">
+            </div>
+            <div class="form-group">
+                <label>Tagline:</label>
+                <input type="text" id="clubTagline" value="Ideas Worth Spreading" onchange="updateClubInfo()">
+            </div>
+            <div class="form-group">
+                <label>Hero Title:</label>
+                <input type="text" id="heroTitle" value="Ideas Worth Spreading" onchange="updateClubInfo()">
+            </div>
+            <div class="form-group">
+                <label>Hero Description:</label>
+                <textarea id="heroDescription" onchange="updateClubInfo()">Join us as we bring together brilliant minds from our community to share ideas that inspire, educate, and spark meaningful conversations about the future.</textarea>
+            </div>
+            <div class="form-group">
+                <label>About Description:</label>
+                <textarea id="aboutDescription" onchange="updateClubInfo()">We are a passionate group of students dedicated to bringing the TED experience to our campus. Our mission is to create a platform where innovative ideas can flourish and inspire positive change in our community and beyond.</textarea>
+            </div>
+            <div class="form-group">
+                <label>Contact Email:</label>
+                <input type="email" id="contactEmail" value="tedx@college.edu" onchange="updateClubInfo()">
+            </div>
+            <div class="form-group">
+                <label>Contact Phone:</label>
+                <input type="text" id="contactPhone" value="(555) 123-4567" onchange="updateClubInfo()">
+            </div>
+        </div>
+
+        <!-- Speakers Tab -->
+        <div id="speakers" class="tab-content">
+            <h4>Manage Speakers</h4>
+            <button onclick="addNewSpeaker()" class="btn btn-primary">+ Add New Speaker</button>
+            <div id="speakersList" class="speakers-list">
+                <!-- Speaker items will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Events Tab -->
+        <div id="events" class="tab-content">
+            <h4>Manage Events</h4>
+            <button onclick="addNewEvent()" class="btn btn-primary">+ Add New Event</button>
+            <div id="eventsList" class="events-list">
+                <!-- Event items will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">T</div>
+                    <div class="logo-text">
+                        <h1 id="headerClubName">TEDx College Club</h1>
+                        <p id="headerTagline">Ideas Worth Spreading</p>
+                    </div>
+                </div>
+                <div class="nav-container">
+                    <nav class="nav">
+                        <a href="#home">Home</a>
+                        <a href="#speakers-section">Speakers</a>
+                        <a href="#events-section">Events</a>
+                        <a href="#about">About</a>
+                    </nav>
+                    <button onclick="toggleTheme()" class="theme-btn" id="themeBtn" title="Toggle theme">🌙</button>
+                    <div class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 id="heroTitleDisplay">Ideas Worth <span class="highlight">Spreading</span></h1>
+                <p id="heroDescriptionDisplay">Join us as we bring together brilliant minds from our community to share ideas that inspire, educate, and spark meaningful conversations about the future.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">Watch Latest Talks</button>
+                    <button class="btn btn-outline">Join Our Community</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Speakers Section -->
+    <section id="speakers-section" class="speakers">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Speakers</h2>
+                <p>Meet the inspiring individuals who have graced our stage with their groundbreaking ideas and stories.</p>
+            </div>
+            
+            <div id="speakersGrid" class="speakers-grid">
+                <!-- Speakers will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events-section" class="events">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Events</h2>
+                <p>Each year, we organize unforgettable TEDx events that bring our community together.</p>
+            </div>
+            
+            <div id="eventsGrid" class="events-grid">
+                <!-- Events will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <h2>About Our Club</h2>
+                <p id="aboutDescriptionDisplay">We are a passionate group of students dedicated to bringing the TED experience to our campus. Our mission is to create a platform where innovative ideas can flourish and inspire positive change in our community and beyond.</p>
+                
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon">👥</div>
+                        <h3>Community</h3>
+                        <p>Building connections through shared ideas and experiences</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">⚡</div>
+                        <h3>Innovation</h3>
+                        <p>Showcasing groundbreaking ideas that shape our future</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon">🎯</div>
+                        <h3>Impact</h3>
+                        <p>Creating lasting change through powerful storytelling</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <div class="logo-icon">T</div>
+                        <span id="footerClubName">TEDx College Club</span>
+                    </div>
+                    <p>Spreading ideas that matter, one talk at a time.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#speakers-section">Speakers</a></li>
+                        <li><a href="#events-section">Events</a></li>
+                        <li><a href="#about">About</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <span id="footerEmail">tedx@college.edu</span><br>Phone: <span id="footerPhone">(555) 123-4567</span></p>
+                </div>
+            </div>
+
+            <!-- Admin Section -->
+            <div class="admin-section">
+                <div class="admin-toggle-header" onclick="toggleAdminSection()" id="adminToggleHeader">
+                    <h4>Admin Section</h4>
+                    <span class="admin-toggle-icon">▼</span>
+                </div>
+                <div class="admin-content" id="adminContent">
+                    <div class="admin-content-inner">
+                        <button onclick="toggleAdminPanel()" class="admin-btn">
+                            ⚙️ Edit Content
+                        </button>
+                        <p class="admin-description">
+                            Access the content management panel to edit club information, manage speakers, and update events.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 <span id="footerClubNameBottom">TEDx College Club</span>. This independent TEDx event is operated under license from TED.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Speaker Modal -->
+    <div id="speakerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="speakerModalTitle">Add New Speaker</h3>
+                <button onclick="closeSpeakerModal()" class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="speakerName" placeholder="Speaker Name">
+                </div>
+                <div class="form-group">
+                    <label>Title/Profession:</label>
+                    <input type="text" id="speakerTitle" placeholder="e.g., AI Researcher & Tech Entrepreneur">
+                </div>
+                <div class="form-group">
+                    <label>Talk Topic:</label>
+                    <input type="text" id="speakerTopic" placeholder="Talk Title">
+                </div>
+                <div class="form-group">
+                    <label>Description:</label>
+                    <textarea id="speakerDescription" placeholder="Brief description of the talk"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Year:</label>
+                    <input type="number" id="speakerYear" placeholder="2024" min="2020" max="2030">
+                </div>
+                <div class="form-group">
+                    <label>Duration:</label>
+                    <input type="text" id="speakerDuration" placeholder="18 min">
+                </div>
+                <div class="form-group">
+                    <label>Photo URL:</label>
+                    <input type="url" id="speakerImage" placeholder="https://example.com/photo.jpg">
+                    <small>Or upload a file:</small>
+                    <input type="file" id="speakerImageFile" accept="image/*" onchange="handleImageUpload(this, 'speakerImage')">
+                </div>
+                <div class="form-group">
+                    <label>Social Media:</label>
+                    <select id="speakerSocialType">
+                        <option value="">Select Platform</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="LinkedIn">LinkedIn</option>
+                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Social Media Handle/URL:</label>
+                    <input type="text" id="speakerSocialHandle" placeholder="@username or full URL">
+                    <small>For Instagram: @username or full URL. For YouTube: channel URL</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeSpeakerModal()" class="btn btn-outline">Cancel</button>
+                <button onclick="saveSpeaker()" class="btn btn-primary">Save Speaker</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="eventModalTitle">Add New Event</h3>
+                <button onclick="closeEventModal()" class="close-btn">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Year:</label>
+                    <input type="number" id="eventYear" placeholder="2024" min="2020" max="2030">
+                </div>
+                <div class="form-group">
+                    <label>Theme:</label>
+                    <input type="text" id="eventTheme" placeholder="e.g., Connections">
+                </div>
+                <div class="form-group">
+                    <label>Date:</label>
+                    <input type="text" id="eventDate" placeholder="March 15, 2024">
+                </div>
+                <div class="form-group">
+                    <label>Venue:</label>
+                    <input type="text" id="eventVenue" placeholder="University Auditorium">
+                </div>
+                <div class="form-group">
+                    <label>Attendees:</label>
+                    <input type="number" id="eventAttendees" placeholder="500">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeEventModal()" class="btn btn-outline">Cancel</button>
+                <button onclick="saveEvent()" class="btn btn-primary">Save Event</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let speakers = [
+            {
+                id: 1,
+                name: "Dr. Sarah Chen",
+                title: "AI Researcher & Tech Entrepreneur",
+                image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=300&fit=crop&crop=face",
+                topic: "The Future of Human-AI Collaboration",
+                description: "Dr. Chen explores how artificial intelligence will reshape the way we work, learn, and create in the coming decades.",
+                year: "2024",
+                duration: "18 min",
+                socialType: "instagram",
+                socialHandle: "@sarahchen_ai"
+            },
+            {
+                id: 2,
+                name: "Marcus Rodriguez",
+                title: "Environmental Activist",
+                image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&crop=face",
+                topic: "Small Actions, Big Impact",
+                description: "Marcus shares inspiring stories of how individual choices can create ripple effects for environmental change.",
+                year: "2024",
+                duration: "15 min",
+                socialType: "youtube",
+                socialHandle: "https://youtube.com/@marcusgreen"
+            },
+            {
+                id: 3,
+                name: "Prof. Amara Okafor",
+                title: "Neuroscientist",
+                image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=300&fit=crop&crop=face",
+                topic: "Rewiring Your Brain for Success",
+                description: "Discover the science behind neuroplasticity and how you can literally reshape your brain for better outcomes.",
+                year: "2023",
+                duration: "20 min",
+                socialType: "instagram",
+                socialHandle: "@prof_amara"
+            },
+            {
+                id: 4,
+                name: "James Liu",
+                title: "Social Entrepreneur",
+                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face",
+                topic: "Building Bridges in Divided Communities",
+                description: "James demonstrates how innovative social programs can heal divisions and create stronger communities.",
+                year: "2023",
+                duration: "16 min",
+                socialType: "youtube",
+                socialHandle: "https://youtube.com/@jamesliu"
+            },
+            {
+                id: 5,
+                name: "Dr. Priya Sharma",
+                title: "Space Engineer",
+                image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face",
+                topic: "Mars: Humanity's Next Chapter",
+                description: "An inside look at the challenges and breakthroughs in preparing for human life on Mars.",
+                year: "2022",
+                duration: "22 min",
+                socialType: "instagram",
+                socialHandle: "@priya_space"
+            },
+            {
+                id: 6,
+                name: "Alex Thompson",
+                title: "Mental Health Advocate",
+                image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=300&h=300&fit=crop&crop=face",
+                topic: "Breaking the Silence on Mental Health",
+                description: "Alex shares their personal journey and advocates for open conversations about mental wellness.",
+                year: "2022",
+                duration: "14 min",
+                socialType: "youtube",
+                socialHandle: "https://youtube.com/@alexthompson"
+            }
+        ];
+
+        let events = [
+            {
+                id: 1,
+                year: "2024",
+                theme: "Connections",
+                date: "March 15, 2024",
+                venue: "University Auditorium",
+                attendees: 500
+            },
+            {
+                id: 2,
+                year: "2023",
+                theme: "Resilience",
+                date: "April 8, 2023",
+                venue: "Main Campus Theater",
+                attendees: 450
+            },
+            {
+                id: 3,
+                year: "2022",
+                theme: "Horizons",
+                date: "March 20, 2022",
+                venue: "Student Center Hall",
+                attendees: 400
+            }
+        ];
+
+        let currentEditingSpeaker = null;
+        let currentEditingEvent = null;
+
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.getElementById('themeBtn');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                themeBtn.textContent = '🌙';
+                localStorage.setItem('tedx-theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+                localStorage.setItem('tedx-theme', 'dark');
+            }
+        }
+
+        // Load theme preference
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('tedx-theme');
+            const themeBtn = document.getElementById('themeBtn');
+            
+            if (savedTheme === 'dark') {
+                document.body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+            } else {
+                themeBtn.textContent = '🌙';
+            }
+        }
+
+        // Admin section toggle
+        function toggleAdminSection() {
+            const header = document.getElementById('adminToggleHeader');
+            const content = document.getElementById('adminContent');
+            
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+            
+            // Save state
+            const isOpen = content.classList.contains('active');
+            localStorage.setItem('tedx-admin-section-open', isOpen);
+        }
+
+        // Load admin section state
+        function loadAdminSectionState() {
+            const isOpen = localStorage.getItem('tedx-admin-section-open') === 'true';
+            if (isOpen) {
+                document.getElementById('adminToggleHeader').classList.add('active');
+                document.getElementById('adminContent').classList.add('active');
+            }
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadAdminSectionState();
+            loadData();
+            renderSpeakers();
+            renderEvents();
+            populateSpeakersList();
+            populateEventsList();
+        });
+
+        // Load data from localStorage
+        function loadData() {
+            const savedSpeakers = localStorage.getItem('tedx-speakers');
+            const savedEvents = localStorage.getItem('tedx-events');
+            const savedClubInfo = localStorage.getItem('tedx-club-info');
+            
+            if (savedSpeakers) {
+                speakers = JSON.parse(savedSpeakers);
+            }
+            
+            if (savedEvents) {
+                events = JSON.parse(savedEvents);
+            }
+            
+            if (savedClubInfo) {
+                const clubInfo = JSON.parse(savedClubInfo);
+                document.getElementById('clubName').value = clubInfo.clubName || 'TEDx College Club';
+                document.getElementById('clubTagline').value = clubInfo.clubTagline || 'Ideas Worth Spreading';
+                document.getElementById('heroTitle').value = clubInfo.heroTitle || 'Ideas Worth Spreading';
+                document.getElementById('heroDescription').value = clubInfo.heroDescription || 'Join us as we bring together brilliant minds from our community to share ideas that inspire, educate, and spark meaningful conversations about the future.';
+                document.getElementById('aboutDescription').value = clubInfo.aboutDescription || 'We are a passionate group of students dedicated to bringing the TED experience to our campus. Our mission is to create a platform where innovative ideas can flourish and inspire positive change in our community and beyond.';
+                document.getElementById('contactEmail').value = clubInfo.contactEmail || 'tedx@college.edu';
+                document.getElementById('contactPhone').value = clubInfo.contactPhone || '(555) 123-4567';
+                updateClubInfo();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('tedx-speakers', JSON.stringify(speakers));
+            localStorage.setItem('tedx-events', JSON.stringify(events));
+        }
+
+        // Admin panel functions
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.toggle('active');
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        // Club info functions
+        function updateClubInfo() {
+            const clubInfo = {
+                clubName: document.getElementById('clubName').value,
+                clubTagline: document.getElementById('clubTagline').value,
+                heroTitle: document.getElementById('heroTitle').value,
+                heroDescription: document.getElementById('heroDescription').value,
+                aboutDescription: document.getElementById('aboutDescription').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                contactPhone: document.getElementById('contactPhone').value
+            };
+            
+            // Update all instances of club name
+            document.getElementById('headerClubName').textContent = clubInfo.clubName;
+            document.getElementById('headerTagline').textContent = clubInfo.clubTagline;
+            document.getElementById('footerClubName').textContent = clubInfo.clubName;
+            document.getElementById('footerClubNameBottom').textContent = clubInfo.clubName;
+            
+            // Update hero section
+            document.getElementById('heroTitleDisplay').innerHTML = clubInfo.heroTitle.replace(/(\w+)$/, '<span class="highlight">$1</span>');
+            document.getElementById('heroDescriptionDisplay').textContent = clubInfo.heroDescription;
+            
+            // Update about section
+            document.getElementById('aboutDescriptionDisplay').textContent = clubInfo.aboutDescription;
+            
+            // Update contact info
+            document.getElementById('footerEmail').textContent = clubInfo.contactEmail;
+            document.getElementById('footerPhone').textContent = clubInfo.contactPhone;
+            
+            // Save to localStorage
+            localStorage.setItem('tedx-club-info', JSON.stringify(clubInfo));
+        }
+
+        // Generate social media link
+        function generateSocialLink(type, handle) {
+            if (!type || !handle) return '';
+            
+            let url = handle;
+            if (type === 'instagram') {
+                if (handle.startsWith('@')) {
+                    url = `https://instagram.com/${handle.substring(1)}`;
+                } else if (!handle.startsWith('http')) {
+                    url = `https://instagram.com/${handle}`;
+                }
+            } else if (type === 'youtube') {
+                if (!handle.startsWith('http')) {
+                    url = `https://youtube.com/${handle}`;
+                }
+            }
+            
+            return url;
+        }
+
+        // Generate social media icon SVG
+        function getSocialIcon(type) {
+            if (type === 'instagram') {
+                return `<svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>`;
+            } else if (type === 'youtube') {
+                return `<svg class="social-icon" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>`;
+            }
+            return '';
+        }
+
+        // Speaker functions
+        function renderSpeakers() {
+            const grid = document.getElementById('speakersGrid');
+            grid.innerHTML = '';
+            
+            speakers.forEach(speaker => {
+                const speakerCard = document.createElement('div');
+                speakerCard.className = 'speaker-card';
+                
+                let socialLinks = '';
+                if (speaker.socialType && speaker.socialHandle) {
+                    const socialUrl = generateSocialLink(speaker.socialType, speaker.socialHandle);
+                    const socialIcon = getSocialIcon(speaker.socialType);
+                    socialLinks = `
+                        <div class="social-links">
+                            <a href="${socialUrl}" target="_blank" rel="noopener noreferrer" class="social-link ${speaker.socialType}">
+                                ${socialIcon}
+                            </a>
+                        </div>
+                    `;
+                }
+                
+                speakerCard.innerHTML = `
+                    <div class="speaker-image">
+                        <img src="${speaker.image}" alt="${speaker.name}">
+                        <span class="year-badge">${speaker.year}</span>
+                    </div>
+                    <div class="speaker-info">
+                        <h3>${speaker.name}</h3>
+                        <p class="speaker-title">${speaker.title}</p>
+                        <h4>${speaker.topic}</h4>
+                        <p class="speaker-description">${speaker.description}</p>
+                        <div class="speaker-footer">
+                            <div class="speaker-footer-left">
+                                <span class="duration">⏵ ${speaker.duration}</span>
+                                ${socialLinks}
+                            </div>
+                            <button class="btn btn-small">Watch Talk</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(speakerCard);
+            });
+        }
+
+        function populateSpeakersList() {
+            const list = document.getElementById('speakersList');
+            list.innerHTML = '';
+            
+            speakers.forEach(speaker => {
+                const item = document.createElement('div');
+                item.className = 'speaker-item';
+                item.innerHTML = `
+                    <h5>${speaker.name}</h5>
+                    <p>${speaker.topic} (${speaker.year})</p>
+                    <div class="item-actions">
+                        <button class="btn-small btn-edit" onclick="editSpeaker(${speaker.id})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteSpeaker(${speaker.id})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addNewSpeaker() {
+            currentEditingSpeaker = null;
+            document.getElementById('speakerModalTitle').textContent = 'Add New Speaker';
+            clearSpeakerForm();
+            document.getElementById('speakerModal').classList.add('active');
+        }
+
+        function editSpeaker(id) {
+            const speaker = speakers.find(s => s.id === id);
+            if (speaker) {
+                currentEditingSpeaker = speaker;
+                document.getElementById('speakerModalTitle').textContent = 'Edit Speaker';
+                
+                document.getElementById('speakerName').value = speaker.name;
+                document.getElementById('speakerTitle').value = speaker.title;
+                document.getElementById('speakerTopic').value = speaker.topic;
+                document.getElementById('speakerDescription').value = speaker.description;
+                document.getElementById('speakerYear').value = speaker.year;
+                document.getElementById('speakerDuration').value = speaker.duration;
+                document.getElementById('speakerImage').value = speaker.image;
+                document.getElementById('speakerSocialType').value = speaker.socialType || '';
+                document.getElementById('speakerSocialHandle').value = speaker.socialHandle || '';
+                
+                document.getElementById('speakerModal').classList.add('active');
+            }
+        }
+
+        function deleteSpeaker(id) {
+            if (confirm('Are you sure you want to delete this speaker?')) {
+                speakers = speakers.filter(s => s.id !== id);
+                saveData();
+                renderSpeakers();
+                populateSpeakersList();
+            }
+        }
+
+        function saveSpeaker() {
+            const name = document.getElementById('speakerName').value;
+            const title = document.getElementById('speakerTitle').value;
+            const topic = document.getElementById('speakerTopic').value;
+            const description = document.getElementById('speakerDescription').value;
+            const year = document.getElementById('speakerYear').value;
+            const duration = document.getElementById('speakerDuration').value;
+            const image = document.getElementById('speakerImage').value;
+            const socialType = document.getElementById('speakerSocialType').value;
+            const socialHandle = document.getElementById('speakerSocialHandle').value;
+            
+            if (!name || !title || !topic || !description || !year || !duration) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (currentEditingSpeaker) {
+                // Update existing speaker
+                currentEditingSpeaker.name = name;
+                currentEditingSpeaker.title = title;
+                currentEditingSpeaker.topic = topic;
+                currentEditingSpeaker.description = description;
+                currentEditingSpeaker.year = year;
+                currentEditingSpeaker.duration = duration;
+                currentEditingSpeaker.image = image || 'https://via.placeholder.com/300x300?text=Speaker';
+                currentEditingSpeaker.socialType = socialType;
+                currentEditingSpeaker.socialHandle = socialHandle;
+            } else {
+                // Add new speaker
+                const newSpeaker = {
+                    id: Date.now(),
+                    name,
+                    title,
+                    topic,
+                    description,
+                    year,
+                    duration,
+                    image: image || 'https://via.placeholder.com/300x300?text=Speaker',
+                    socialType,
+                    socialHandle
+                };
+                speakers.push(newSpeaker);
+            }
+            
+            saveData();
+            renderSpeakers();
+            populateSpeakersList();
+            closeSpeakerModal();
+        }
+
+        function clearSpeakerForm() {
+            document.getElementById('speakerName').value = '';
+            document.getElementById('speakerTitle').value = '';
+            document.getElementById('speakerTopic').value = '';
+            document.getElementById('speakerDescription').value = '';
+            document.getElementById('speakerYear').value = '';
+            document.getElementById('speakerDuration').value = '';
+            document.getElementById('speakerImage').value = '';
+            document.getElementById('speakerImageFile').value = '';
+            document.getElementById('speakerSocialType').value = '';
+            document.getElementById('speakerSocialHandle').value = '';
+        }
+
+        function closeSpeakerModal() {
+            document.getElementById('speakerModal').classList.remove('active');
+            currentEditingSpeaker = null;
+        }
+
+        // Event functions
+        function renderEvents() {
+            const grid = document.getElementById('eventsGrid');
+            grid.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                eventCard.innerHTML = `
+                    <div class="event-icon">📅</div>
+                    <h3>TEDx ${event.year}</h3>
+                    <p class="event-theme">Theme: ${event.theme}</p>
+                    <div class="event-details">
+                        <div class="event-detail">
+                            <span class="icon">📅</span>
+                            <span>${event.date}</span>
+                        </div>
+                        <div class="event-detail">
+                            <span class="icon">📍</span>
+                            <span>${event.venue}</span>
+                        </div>
+                        <div class="event-detail">
+                            <span class="icon">👥</span>
+                            <span>${event.attendees} attendees</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(eventCard);
+            });
+        }
+
+        function populateEventsList() {
+            const list = document.getElementById('eventsList');
+            list.innerHTML = '';
+            
+            events.forEach(event => {
+                const item = document.createElement('div');
+                item.className = 'event-item';
+                item.innerHTML = `
+                    <h5>TEDx ${event.year} - ${event.theme}</h5>
+                    <p>${event.date} at ${event.venue}</p>
+                    <div class="item-actions">
+                        <button class="btn-small btn-edit" onclick="editEvent(${event.id})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteEvent(${event.id})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addNewEvent() {
+            currentEditingEvent = null;
+            document.getElementById('eventModalTitle').textContent = 'Add New Event';
+            clearEventForm();
+            document.getElementById('eventModal').classList.add('active');
+        }
+
+        function editEvent(id) {
+            const event = events.find(e => e.id === id);
+            if (event) {
+                currentEditingEvent = event;
+                document.getElementById('eventModalTitle').textContent = 'Edit Event';
+                
+                document.getElementById('eventYear').value = event.year;
+                document.getElementById('eventTheme').value = event.theme;
+                document.getElementById('eventDate').value = event.date;
+                document.getElementById('eventVenue').value = event.venue;
+                document.getElementById('eventAttendees').value = event.attendees;
+                
+                document.getElementById('eventModal').classList.add('active');
+            }
+        }
+
+        function deleteEvent(id) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                events = events.filter(e => e.id !== id);
+                saveData();
+                renderEvents();
+                populateEventsList();
+            }
+        }
+
+        function saveEvent() {
+            const year = document.getElementById('eventYear').value;
+            const theme = document.getElementById('eventTheme').value;
+            const date = document.getElementById('eventDate').value;
+            const venue = document.getElementById('eventVenue').value;
+            const attendees = document.getElementById('eventAttendees').value;
+            
+            if (!year || !theme || !date || !venue || !attendees) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (currentEditingEvent) {
+                // Update existing event
+                currentEditingEvent.year = year;
+                currentEditingEvent.theme = theme;
+                currentEditingEvent.date = date;
+                currentEditingEvent.venue = venue;
+                currentEditingEvent.attendees = parseInt(attendees);
+            } else {
+                // Add new event
+                const newEvent = {
+                    id: Date.now(),
+                    year,
+                    theme,
+                    date,
+                    venue,
+                    attendees: parseInt(attendees)
+                };
+                events.push(newEvent);
+            }
+            
+            saveData();
+            renderEvents();
+            populateEventsList();
+            closeEventModal();
+        }
+
+        function clearEventForm() {
+            document.getElementById('eventYear').value = '';
+            document.getElementById('eventTheme').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventVenue').value = '';
+            document.getElementById('eventAttendees').value = '';
+        }
+
+        function closeEventModal() {
+            document.getElementById('eventModal').classList.remove('active');
+            currentEditingEvent = null;
+        }
+
+        // Image upload handler
+        function handleImageUpload(input, targetInputId) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(targetInputId).value = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const nav = document.querySelector('.nav');
+            nav.classList.toggle('active');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Story Poster Gallery</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        .gallery-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d96ff);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .gallery-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .gallery-grid {
+            display: flex;
+            gap: 30px;
+            overflow-x: auto;
+            padding: 20px 0;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .gallery-grid::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .story-poster {
+            flex: none;
+            width: 300px;
+            height: 533px;
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
+        
+        .story-poster:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Poster 1: Minimalist Moodboard */
+        .poster-1 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .poster-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.05"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .poster-1 .header {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .poster-1 .date {
+            font-size: 0.9rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .poster-1 .main-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            line-height: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .poster-1 .subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+            font-weight: 300;
+        }
+        
+        .poster-1 .footer {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .poster-1 .brand {
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        
+        .poster-1 .cta {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Poster 2: TEDx Style */
+        .poster-2 {
+            background: linear-gradient(45deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 30px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .poster-2::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, #ff4757 0%, transparent 70%);
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .poster-2 .tedx-logo {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #ff4757;
+            letter-spacing: 2px;
+        }
+        
+        .poster-2 .speaker-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .poster-2 .talk-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 30px;
+        }
+        
+        .poster-2 .quote {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+            font-style: italic;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .poster-2 .quote::before,
+        .poster-2 .quote::after {
+            content: '"';
+            font-size: 3rem;
+            color: #ff4757;
+            position: absolute;
+            font-family: serif;
+        }
+        
+        .poster-2 .quote::before {
+            top: -20px;
+            left: -20px;
+        }
+        
+        .poster-2 .quote::after {
+            bottom: -40px;
+            right: -10px;
+        }
+        
+        .poster-2 .event-info {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            font-weight: 300;
+        }
+        
+        /* Poster 3: Social Campaign */
+        .poster-3 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poster-3::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            border-radius: 50%;
+        }
+        
+        .poster-3::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            border-radius: 50%;
+        }
+        
+        .poster-3 .campaign-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 60px;
+        }
+        
+        .poster-3 .hashtag {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .poster-3 .campaign-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+            line-height: 0.9;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        
+        .poster-3 .stats {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-around;
+            margin: 60px 0;
+        }
+        
+        .poster-3 .stat {
+            text-align: center;
+        }
+        
+        .poster-3 .stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            display: block;
+        }
+        
+        .poster-3 .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        .poster-3 .call-to-action {
+            position: relative;
+            z-index: 2;
+            margin-top: auto;
+            text-align: center;
+        }
+        
+        .poster-3 .cta-text {
+            font-size: 1.1rem;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .poster-3 .cta-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Poster 4: Creative Portfolio */
+        .poster-4 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            position: relative;
+        }
+        
+        .poster-4::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+        
+        .poster-4 .portfolio-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 40px;
+        }
+        
+        .poster-4 .designer-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 10px;
+        }
+        
+        .poster-4 .role {
+            font-size: 0.9rem;
+            color: rgba(44, 44, 44, 0.7);
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .poster-4 .showcase {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .poster-4 .project-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c2c2c;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .poster-4 .project-type {
+            font-size: 1rem;
+            color: rgba(44, 44, 44, 0.6);
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+        
+        .poster-4 .visual-element {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poster-4 .visual-element::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            top: 20px;
+            left: 20px;
+        }
+        
+        .poster-4 .contact {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            font-size: 0.9rem;
+            color: rgba(44, 44, 44, 0.7);
+            font-weight: 300;
+        }
+        
+        /* Poster 5: Event Announcement */
+        .poster-5 {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .poster-5::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+        
+        .poster-5::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.05), transparent);
+            border-radius: 50%;
+        }
+        
+        .poster-5 .event-date {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .poster-5 .day {
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            line-height: 0.8;
+            display: block;
+        }
+        
+        .poster-5 .month-year {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .poster-5 .event-content {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .poster-5 .event-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+        
+        .poster-5 .event-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+        
+        .poster-5 .event-details {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        
+        .poster-5 .venue {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .poster-5 .time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                gap: 20px;
+                padding: 10px;
+            }
+            
+            .story-poster {
+                width: 280px;
+                height: 497px;
+            }
+            
+            .gallery-container {
+                padding: 20px 0;
+            }
+            
+            .gallery-header {
+                margin-bottom: 40px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .story-poster {
+                width: 250px;
+                height: 444px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <div class="gallery-header">
+            <h1 class="gallery-title">Story Gallery</h1>
+            <p class="gallery-subtitle">A curated collection of Instagram Story designs featuring bold typography, creative layouts, and compelling visual narratives</p>
+        </div>
+        
+        <div class="gallery-grid">
+            <!-- Poster 1: Minimalist Moodboard -->
+            <div class="story-poster poster-1">
+                <div class="header">
+                    <div class="date">March 2024</div>
+                    <h2 class="main-title">Creative<br>Vision</h2>
+                    <p class="subtitle">Exploring the intersection of art, design, and human emotion</p>
+                </div>
+                <div class="footer">
+                    <div class="brand">STUDIO</div>
+                    <div class="cta">Explore</div>
+                </div>
+            </div>
+            
+            <!-- Poster 2: TEDx Style -->
+            <div class="story-poster poster-2">
+                <div class="tedx-logo">TEDx</div>
+                <div class="speaker-name">Sarah Chen</div>
+                <h2 class="talk-title">The Future of Human Connection</h2>
+                <p class="quote">Technology should amplify our humanity, not replace it</p>
+                <div class="event-info">TEDxSanFrancisco • March 15, 2024</div>
+            </div>
+            
+            <!-- Poster 3: Social Campaign -->
+            <div class="story-poster poster-3">
+                <div class="campaign-header">
+                    <div class="hashtag">#ClimateAction</div>
+                    <h2 class="campaign-title">Our Planet<br>Our Future</h2>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number">2.5M</span>
+                        <span class="stat-label">Supporters</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">150</span>
+                        <span class="stat-label">Cities</span>
+                    </div>
+                </div>
+                <div class="call-to-action">
+                    <div class="cta-text">Join the Movement</div>
+                    <div class="cta-button">Act Now</div>
+                </div>
+            </div>
+            
+            <!-- Poster 4: Creative Portfolio -->
+            <div class="story-poster poster-4">
+                <div class="portfolio-header">
+                    <h2 class="designer-name">Alex Rivera</h2>
+                    <div class="role">Visual Designer</div>
+                </div>
+                <div class="showcase">
+                    <h3 class="project-title">Brand<br>Identity</h3>
+                    <div class="project-type">Digital Experience Design</div>
+                    <div class="visual-element"></div>
+                </div>
+                <div class="contact">hello@alexrivera.com</div>
+            </div>
+            
+            <!-- Poster 5: Event Announcement -->
+            <div class="story-poster poster-5">
+                <div class="event-date">
+                    <span class="day">25</span>
+                    <span class="month-year">June 2024</span>
+                </div>
+                <div class="event-content">
+                    <h2 class="event-title">Design Conference</h2>
+                    <p class="event-subtitle">Where creativity meets innovation in the digital age</p>
+                </div>
+                <div class="event-details">
+                    <div class="venue">Convention Center</div>
+                    <div class="time">9:00 AM - 6:00 PM</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon Review Page Clone</title>
+
+</head>
+<link rel="stylesheet" href="style.css">
+<body>
+      <header class="amazon-navbar">
+    <div class="nav-left">
+        <img src="https://th.bing.com/th/id/OIP.m4u8sR2pk_6KVOv4blD8pwHaFj?w=192&h=180&c=7&r=0&o=7&cb=12&dpr=1.5&pid=1.7&rm=3" alt="amazon" class="logo">
+       <div class="location">
+        <span class="location-icon">📌</span>
+        <label for="location">select location</label>
+         <select name="location" id="location" > 
+        <option >India</option>
+       </select>
+    </div>
+    </div>
+<div class="nav-center">
+    <input type="search" id="search-input" placeholder="search...">
+    <button type="submit">🔍search</button>
+</div>
+<div class="nav-right">
+    <span class="lang">🌐EN</span>
+    <button class="signin">sign in</button>
+    <button class="cart">🛒cart</button>
+</div>
+</header>
+  <div class="container">
+    <div class="product-header">
+      <img src="data:image/webp;base64,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" alt="Product Image">
+      <div class="product-info">
+        <h1>Wireless Noise-Cancelling Headphones</h1>
+        <div class="brand">by Acme Audio</div>
+        <div class="rating-summary">⭐ 4.2/5 (5 customer reviews)</div>
+      </div>
+    </div><div class="review-section">
+  <div>
+    <div class="review-controls">
+      <input type="text" placeholder="Search reviews...">
+      <select>
+        <option>All ratings</option>
+        <option>5 stars</option>
+        <option>4 stars</option>
+        <option>3 stars</option>
+        <option>2 stars</option>
+        <option>1 star</option>
+      </select>
+    </div>
+
+    <div class="review-card">
+      <div class="review-title">Fantastic sound and battery</div>
+      <div class="Flag">
+        <form action="submit" method="post">
+          <input type="radio" id="red1" name="color" value="red">
+          <label for="red">Red</label>
+            <input type="radio" id="green1" name="color" value="green" >
+          <label for="green">Green</label>
+        </form>
+      </div>
+      <div class="stars">★★★★★</div>
+      <div class="review-body">Clear mids and strong bass. Battery lasted 28 hours with ANC on.</div>
+      <div class="review-footer">
+        <span>by Priya R. • Sept 1, 2025</span>
+        <span>Helpful (12)</span>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-title">Comfortable but a little heavy</div>
+      <div class="Flag">
+        <form action="submit" method="post">
+          <input type="radio" id="red2" name="color" value="red">
+          <label for="red" >Red</label>
+            <input type="radio" id="green2" name="color" value="green">
+          <label for="green">Green</label>
+        </form>
+      </div>
+      <div class="stars">★★★★☆</div>
+      <div class="review-body">Very comfortable for long sessions. Slightly heavy on flights.</div>
+      <div class="review-footer">
+        <span>by Aman K. • Sept 15, 2025</span>
+        <span>Helpful (1)</span>
+      </div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-title">Stopped working after 6 months</div>
+       <div class="Flag">
+        <form action="submit" method="post">
+          <input type="radio" id="red3" name="color" value="red">
+          <label for="red">Red</label>
+            <input type="radio" id="green3" name="color" value="green">
+          <label for="green">Green</label>
+        </form>
+      </div>
+      <div class="stars">★★☆☆☆</div>
+      <div class="review-body">Customer support replaced it but still a hassle.</div>
+      <div class="review-footer">
+        <span>by Rahul D. • June 10, 2025</span>
+        <span>Helpful (7)</span>
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div class="review-form">
+      <h3>Write a customer review</h3>
+      <input type="text" placeholder="Your name">
+      <input type="text" placeholder="Review title">
+      <textarea rows="4" placeholder="Write your review..."></textarea>
+      <select>
+        <option>5 stars</option>
+        <option>4 stars</option>
+        <option>3 stars</option>
+        <option>2 stars</option>
+        <option>1 star</option>
+      </select>
+      <button>Submit Review</button>
+    </div>
+  </aside>
+</div>
+
+  </div>
+</body>
+</html>
