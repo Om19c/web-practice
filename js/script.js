@@ -1,5 +1,5 @@
 
-console.info('connected!');
+// console.info('connected!');
 // let a=2;
 // console.log(a);
 // console.info(a);
@@ -71,3 +71,16 @@ console.info('connected!');
 // console.log(count);
 
 
+var btn=document.querySelector('button')
+var box=document.querySelector('#box')
+var p=document.querySelector('p')
+var arr=['hello','om','welcome','html','css']
+btn.addEventListener('click',function(){
+   var c1=Math.floor(Math.random()*256)
+    var c2=Math.floor(Math.random()*256)
+    var c3=Math.floor(Math.random()*256)
+    box.style.backgroundColor=`rgb(${c1},${c2},${c3})`
+    p.style.color=`rgb(${c3},${c1},${c2})`
+    var w=Math.floor(Math.random()*arr.length)
+    p.innerText=arr[w];
+})
